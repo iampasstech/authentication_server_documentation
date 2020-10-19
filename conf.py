@@ -25,7 +25,7 @@ copyright = '2020, Activeconnect'
 author = 'Activeconnect'
 
 # The full version, including alpha/beta/rc tags
-release = '1'
+release = '1.1'
 
 
 # -- General configuration ---------------------------------------------------
