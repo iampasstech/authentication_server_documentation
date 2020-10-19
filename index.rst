@@ -17,7 +17,6 @@ While it is possible to make direct calls to the Activeconnect REST API, we reco
    management_api
    authentication_api
    ios_framework
-   ios_reference
    hmac
 
 
