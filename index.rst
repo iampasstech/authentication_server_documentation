@@ -11,11 +11,13 @@ Activeconnect provides a REST API and libraries for popular languages.
 While it is possible to make direct calls to the Activeconnect REST API, we recommend that clients use our libraries.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    getting_started
    management_api
    authentication_api
+   ios_framework
+   ios_reference
    hmac
 
 

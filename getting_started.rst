@@ -29,6 +29,7 @@ Managing your Application
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 The Activeconnect: :ref:`management_api` is used to manage your application.
 
+.. _adding-users-guide-label:
 Adding Users
 ^^^^^^^^^^^^
 Before you can authenticate a user, you have to register the user with Activeconnect.
