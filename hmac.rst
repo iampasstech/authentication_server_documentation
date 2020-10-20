@@ -40,9 +40,11 @@ The 256 bit key (nonce + Shared Secret) are passed to a SHA-256 function. This w
 
 In pseudo-code the procedure to produce the token would be:
 
-.. code-block:: python
+.. code-block::
 
-    nonce = PRG(0, 264 – 1, uniform distribution) key = concatenate(nonce, Shared Secret) SHA256_Output = SHA-256(key)
+    nonce = PRG(0, 264 – 1, uniform distribution)
+    key = concatenate(nonce, Shared Secret)
+    SHA256_Output = SHA-256(key)
     token = left_truncate(SHA256_Output, 128 bits)
 
 HMAC Signature

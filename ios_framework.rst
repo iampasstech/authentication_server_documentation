@@ -25,6 +25,10 @@ To integrate ActiveconnectiOS into your xCode project using CocoaPods, specify i
 pod 'ActiveconnectiOS', '~>0.1.0'
 ```
 
+Reference
+#########
+The ActiveconnectiOS framework reference documentation can be found `here <https://activeconnect.github.io/iosdocs/>`__.
+
 Getting Started
 ###############
 Create an Activeconnect Account and Application
