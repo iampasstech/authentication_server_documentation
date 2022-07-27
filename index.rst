@@ -1,14 +1,14 @@
 
 
-Activeconnect
+IAMPASS
 =============
 
-Activeconnect provides a **passwordless** authentication system for web and native applications.
+IAMPASS provides a **passwordless** authentication system for web and native applications.
 
-This document describes how to get started integrating Activeconnect into your application.
+This document describes how to get started integrating IAMPASS into your application.
 
-Activeconnect provides a REST API and libraries for popular languages.
-While it is possible to make direct calls to the Activeconnect REST API, we recommend that clients use our libraries.
+IAMPASS provides a REST API and libraries for popular languages.
+While it is possible to make direct calls to the IAMPASS REST API, we recommend that clients use our libraries.
 
 .. toctree::
    :maxdepth: 2

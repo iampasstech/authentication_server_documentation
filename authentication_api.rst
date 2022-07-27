@@ -8,7 +8,7 @@
 Authentication API
 ==================
 
-The Activeconnect Authentication API is used to authenticate users.
+The IAMPASS Authentication API is used to authenticate users.
 
 **The client application is responsible for controlling access to protected resources**
 
@@ -18,7 +18,7 @@ Initiating the Authentication Process
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
    **URL**::
-   https://activeapi.ninja/authentication/authenticate_user/<application_id>/<user_id>?methods=methods
+   https://main.iam-api.com/authentication/authenticate_user/<application_id>/<user_id>?methods=methods
 
    :param: application_id: The Application ID of the application.
    :type: application_id: string
@@ -26,14 +26,14 @@ Initiating the Authentication Process
    :param: user_id: The user to authenticate.
    :type: user_id: string
 
-   :param: methods: (Optional) command separated list of authentication methods to use. If not present **(preferred)** Activeconnect will select appropriate methods.
+   :param: methods: (Optional) command separated list of authentication methods to use. If not present **(preferred)** IAMPASS will select appropriate methods.
    :type: application_id: string.
 
    :return: Authentication session data in json and http status code.
 
    **Example**::
 
-        curl -X POST https://activeapi.ninja/authentication/authenticate_user/<application_id>/<user_id> -H 'cache-control: no-cache'
+        curl -X POST https://main.iam-api.com/authentication/authenticate_user/<application_id>/<user_id> -H 'cache-control: no-cache'
 
 
    **Expected Success Response**::

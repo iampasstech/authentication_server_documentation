@@ -20,9 +20,9 @@ master_doc = 'index'
 
 # -- Project information -----------------------------------------------------
 
-project = 'Activeconnect'
-copyright = '2020, Activeconnect'
-author = 'Activeconnect'
+project = 'IAMPASS'
+copyright = '2022, IAMPASS'
+author = 'IAMPASS'
 
 # The full version, including alpha/beta/rc tags
 release = '1.2'

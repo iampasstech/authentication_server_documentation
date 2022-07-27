@@ -8,7 +8,7 @@
 Management API
 ==============
 
-The Activeconnect Management API is used to manage your *Activeconnect Applications*
+The IAMPASS Management API is used to manage your *IAMPASS Applications*
 You use the Management API to:
    * Add users
    * Delete users
@@ -16,7 +16,7 @@ You use the Management API to:
    * Detecting if users have registered a mobile device
    * Handling lost devices
 
-All calls to the Activeconnect API must include authentication data as described in :ref:`hmac`
+All calls to the IAMPASS API must include authentication data as described in :ref:`hmac`
 
 
 
@@ -24,7 +24,7 @@ All calls to the Activeconnect API must include authentication data as described
 Adding Users
 ------------
    **URL**::
-   https://activeapi.ninja/add_users/<application_id>
+   https://main.iam-api.com/add_users/<application_id>
 
    :param: application_id: The Application ID of the application.
    :type: application_id: string
@@ -33,7 +33,7 @@ Adding Users
 
    **Example**::
 
-        curl -X POST https://activeapi.ninja/management/add_users/<application_id> -H 'cache-control: no-cache' -H 'content-type: application/json' \
+        curl -X POST https://main.iam-api.com/management/add_users/<application_id> -H 'cache-control: no-cache' -H 'content-type: application/json' \
         -d '{
             'users': ['user1', 'user2']
         }'
@@ -71,7 +71,7 @@ Adding Users
 Deleting Users
 --------------
    **URL**::
-   https://activeapi.ninja/delete_users/<application_id>
+   https://main.iam-api.com/delete_users/<application_id>
 
    :param: application_id: The Application ID of the application.
    :type: application_id: string
@@ -81,7 +81,7 @@ Deleting Users
 
    **Example**::
 
-      curl -X POST https://activeapi.ninja/management/delete_users/<application_id> -H 'cache-control: no-cache' -H 'content-type: application/json' \
+      curl -X POST https://main.iam-api.com/management/delete_users/<application_id> -H 'cache-control: no-cache' -H 'content-type: application/json' \
       -d '{
           'users': ['user1', 'user2']
       }'
@@ -112,7 +112,7 @@ Device Registration
    See :ref:`getting_started` for information about registration links.
 
    **URL**::
-   https://activeapi.ninja/device_registration_link/application_id/user_id?display_name=display_name
+   https://main.iam-api.com/device_registration_link/application_id/user_id?display_name=display_name
 
    :param: application_id: The Application ID of the application.
    :type: application_id: string
@@ -120,14 +120,14 @@ Device Registration
    :param: user_id: The ID of the user. This value must be URL encoded.
    :type: user_id: string
 
-   :param: display_name: (Optional) string that will be used by the Activeconnect Mobile App to display the user information. You can use something like *'user1@my_application'*. This value must be URL encoded.
+   :param: display_name: (Optional) string that will be used by the IAMPASS Mobile App to display the user information. You can use something like *'user1@my_application'*. This value must be URL encoded.
 
 
    :return: Operation result as json and HTTP status code
 
    **Example**::
 
-      curl -X GET https://activeapi.ninja/management/device_registration_link/<application_id>/<userID>?display_name="user1" -H 'cache-control: no-cache' -H 'content-type: application/json'
+      curl -X GET https://main.iam-api.com/management/device_registration_link/<application_id>/<userID>?display_name="user1" -H 'cache-control: no-cache' -H 'content-type: application/json'
 
 
    **Expected Success Response**::
@@ -154,7 +154,7 @@ Checking for Registered Device
 ------------------------------
 
    **URL**::
-   https://activeapi.ninja/has_registered_mobile_device/application_id/user_id
+   https://main.iam-api.com/has_registered_mobile_device/application_id/user_id
 
    :param: application_id: The Application ID of the application.
    :type: application_id: string
@@ -166,7 +166,7 @@ Checking for Registered Device
 
    **Example**::
 
-      curl -X GET https://activeapi.ninja/management/has_registered_mobile_device/<application_id>/<userID> -H 'cache-control: no-cache' -H 'content-type: application/json'
+      curl -X GET https://main.iam-api.com/management/has_registered_mobile_device/<application_id>/<userID> -H 'cache-control: no-cache' -H 'content-type: application/json'
 
 
    **Expected Success Response**::
@@ -196,7 +196,7 @@ Dealing with Lost Devices
    See :ref:`getting_started` for information about registration links.
 
    **URL**::
-   https://activeapi.ninja/lost_user_mobile_device/application_id/user_id
+   https://main.iam-api.com/lost_user_mobile_device/application_id/user_id
 
    :param: application_id: The Application ID of the application.
    :type: application_id: string
@@ -208,7 +208,7 @@ Dealing with Lost Devices
 
    **Example**::
 
-      curl -X GET https://activeapi.ninja/management/lost_user_mobile_device/<application_id>/<userID> -H 'cache-control: no-cache' -H 'content-type: application/json'
+      curl -X GET https://main.iam-api.com/management/lost_user_mobile_device/<application_id>/<userID> -H 'cache-control: no-cache' -H 'content-type: application/json'
 
 
    **Expected Success Response**::
