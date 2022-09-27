@@ -17,6 +17,7 @@ While it is possible to make direct calls to the IAMPASS REST API, we recommend 
    management_api
    authentication_api
    ios_framework
+   android_framework
    hmac
 
 

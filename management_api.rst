@@ -10,17 +10,19 @@ Management API
 
 The IAMPASS Management API is used to manage your *IAMPASS Applications*
 You use the Management API to:
-   * Add users
-   * Delete users
-   * Registser mobile devices
-   * Detecting if users have registered a mobile device
-   * Handling lost devices
+
+* Add users
+* Delete users
+* Registser mobile devices
+* Detecting if users have registered a mobile device
+* Handling lost devices
 
 All calls to the IAMPASS API must include authentication data as described in :ref:`hmac`
 
 
 
 .. _adding-users-label:
+
 Adding Users
 ------------
    **URL**::

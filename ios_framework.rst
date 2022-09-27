@@ -17,10 +17,9 @@ In this case the custom application is responsible for:
 Installation
 ############
 The easiest way to integrate IAMPASS into your application is to use `CocoaPods <https://cocoapods.org>`__.
-To integrate IAMPASS into your xCode project using CocoaPods, specify it in your `podfile`.
-```
-pod 'IAMPASSiOS', '~>0.0.1'
-```
+To integrate IAMPASS into your xCode project using CocoaPods, specify it in your `podfile`.::
+
+    pod 'IAMPASSiOS', '~>0.0.1'
 
 Reference
 #########
@@ -37,10 +36,9 @@ The first stage in integrating IAMPASS into your applicaton is to create an IAMP
 
 Add the IAMPASSiOS framework to your project
 --------------------------------------------------
-To integrate IAMPASSiOS into your xCode project using CocoaPods, specify it in your `podfile`.
-```
-pod 'IAMPASSiOS', '~>0.1.0'
-```
+To integrate IAMPASSiOS into your xCode project using CocoaPods, specify it in your `podfile`.::
+
+    pod 'IAMPASSiOS', '~>0.1.0'
 
 Application Configuration
 #########################
@@ -52,20 +50,28 @@ Add the `Push Notifications <https://developer.apple.com/documentation/usernotif
 Configure IAMPASS Notifications Credentials
 -------------------------------------------------
 In order to send Push Notifications to your application you need to configure your IAMPASS:
-    * Download the APNS certificates for your application from the Apple Developer Portal.
-    * Import the certificate and private key into KeyChain (both development and production keys).
-    * Export the certificate and private key from KeyChain as .p12 files.
-    * Open the `IAMPASS Console <https://main.iam-api.com>`__
-    * Select your application and click the **Details** button.
-    .. image:: ./images/applications.png
-    * In the details page click the settings icon and select **Notification Settings**.
-    .. image:: ./images/applicationdetails.png
-    * On the Notifications Settings page click the **Edit** button for iOS.
-    .. image:: ./images/notificationsettings.png
-    * On the **Apple iOS Notification Settings** page select **Custom iOS** app from the dropdown.
-    .. image:: ./images/customnotification.png
-    * Update the credentials with your APNS certificate and Private Key.
-    * Repeat the process for iOS Sandbox using your development credentials.
+* Download the APNS certificates for your application from the Apple Developer Portal.
+* Import the certificate and private key into KeyChain (both development and production keys).
+* Export the certificate and private key from KeyChain as .p12 files.
+* Open the `IAMPASS Console <https://main.iam-api.com>`__
+* Select your application and click the **Details** button.
+
+  .. image:: ./images/applications.png
+
+* In the details page click the settings icon and select **Notification Settings**.
+
+  .. image:: ./images/applicationdetails.png
+
+* On the Notifications Settings page click the **Edit** button for iOS.
+
+  .. image:: ./images/notificationsettings.png
+
+* On the **Apple iOS Notification Settings** page select **Custom iOS** app from the dropdown.
+
+  .. image:: ./images/customnotification.png
+
+* Update the credentials with your APNS certificate and Private Key.
+* Repeat the process for iOS Sandbox using your development credentials.
 
 IAMPASS will now route your users authentication requests to your iOS application.
 
@@ -73,9 +79,8 @@ Applications Entitlements
 -------------------------
 IAMPASS use Camera and Bluetooth services on your user's mobile device.
 You must add the following entries to your application's info.plist.
-    .. image:: ./images/privacy.png
-
-.. table:: info.plist
+    
+.. image:: ./images/privacy.png
 
 +-------------------------------------------+-----------------------------------------------------------------------+
 | key                                       |     value                                                             |
@@ -96,13 +101,16 @@ Background Modes
 ----------------
 Add the Background Modes entitlement to your application in xCode.
 Enable the following modes:
-    * Acts as a Bluetooth LE accessory
-    * Remote Notifications
-    .. image:: ./images/backgroundmodes.png
+
+* Acts as a Bluetooth LE accessory
+* Remote Notifications
+
+.. image:: ./images/backgroundmodes.png
 
 
 Key Concepts
 ############
+
 When a system uses IAMPASS to authenticate its users:
     * A notification is sent to the users registered device.
     * The registered device collects the required information and send it to IAMPASS.
@@ -114,158 +122,160 @@ A custom IAMPASS mobile device is responsible for:
     * Collecting the required data.
 
 Registering Users
-------------------
+#################
 IAMPASS does not manage your users or replace your sign up flow.
 You register your user with IAMPASS by providing a token that you can relate back to your user See :ref:`getting_started` for information about user management.
 There are 2 common registration flows:
-    * User registers using your mobile application.
-    * User registers externally (in a web browser for example).
+* User registers using your mobile application.
+* User registers externally (in a web browser for example).
 
 **You must wait until your application has completed the Push Notification registration process before registering devices**
 
 Mobile Application Registration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+-------------------------------
 The IAMPASS iOS framework provides an interface for registering users and their mobile device.
 This example assumes that the mobile application has:
-    * Registered for Push Notifications and stored the returned token in **NOTIFICATION_TOKEN**
-    * Registered the user **user** with its own system.
-    .. code-block:: swift
+* Registered for Push Notifications and stored the returned token in **NOTIFICATION_TOKEN**
+* Registered the user **user** with its own system.
 
-        import IAMPASSiOS
-        ...
-        // user: client generated identifer for the client applications user.
-        // NOTIFICATION_TOKEN: The token received by the application when it registers for Push Notifications
-        // MY_APPLICATION_ID: The ID of the IAMPASS application (from IAMPASS Console)
-        // MY_APPLICATION_SECRET: The Application Secret of the IAMPASS application (from IAMPASS Console)
+.. code-block:: swift
 
-        // Create an IAMPASS Management API instance using credentials for client application
-        let management_api = ManagementAPI(application_id: MY_APPLICATION_ID,application_secret: MY_APPLICATION_SECRET)
+   import IAMPASSiOS
 
-        // Register the user with IAMPASS and register this device.
-        management_api.create_user_and_register_device(user: user, notification_token: NOTIFICATION_TOKEN) {(user, device) in
-            // user: The identifier of the user (same as passed to create_user_and_register_device)
-            // device: IPMobileDevice that contains user and device information required for subequent Activeconect calls.
+   // user: client generated identifer for the client applications user.
+   // NOTIFICATION_TOKEN: The token received by the application when it registers for Push Notifications
+   // MY_APPLICATION_ID: The ID of the IAMPASS application (from IAMPASS Console)
+   // MY_APPLICATION_SECRET: The Application Secret of the IAMPASS application (from IAMPASS Console)
 
-            // This example encodes the IPDeviceData as JSON and stores it in user defaults.
-            let encoder = JSONEncoder()
+   // Create an IAMPASS Management API instance using credentials for client application
+   let management_api = ManagementAPI(application_id: MY_APPLICATION_ID,application_secret: MY_APPLICATION_SECRET)
 
-            if let encoded = try? encoder.encode(device){
-                let defaults = UserDefaults.standard
-                defaults.set(encoded, forKey: "user_data")
-                defaults.set(user, forKey: "user_name")
-            }
-        } failure: { (user, error) in
-            // user: The identifier of the user (same as passed to create_user_and_register_device)
-            // error: Error that describes failure reason.
-        }
+    // Register the user with IAMPASS and register this device.
+   management_api.create_user_and_register_device(user: user, notification_token: NOTIFICATION_TOKEN) {(user, device) in
+       // user: The identifier of the user (same as passed to create_user_and_register_device)
+       // device: IPMobileDevice that contains user and device information required for subequent Activeconect calls.
+
+       // This example encodes the IPDeviceData as JSON and stores it in user defaults.
+       let encoder = JSONEncoder()
+       if let encoded = try? encoder.encode(device){
+           let defaults = UserDefaults.standard
+           defaults.set(encoded, forKey: "user_data")
+           defaults.set(user, forKey: "user_name")
+       }
+   } failure: { (user, error) in
+       // user: The identifier of the user (same as passed to create_user_and_register_device)
+       // error: Error that describes failure reason.
+   }
 
 External Registration
-^^^^^^^^^^^^^^^^^^^^^
+---------------------
 IAMPASS generates custom registration links for associating a device with a user.
 The external client application can get the registration link and share it with the mobile application.
 It is the client's responsibility to share these links with the mobile application.
 Alternatively, the mobile application can provide an interface for the user to enter their username and obtain a registration link.
 The IAMPASS iOS framework provides a method to get a registration link for the user
-    .. code-block:: swift
 
-        import IAMPASSiOS
-        ...
-        // user_id: client generated identifer for the client applications user.
-        // display_name: A readable name for the user (user_id may be a random token)
-        // MY_APPLICATION_ID: The ID of the IAMPASS application (from IAMPASS Console)
-        // MY_APPLICATION_SECRET: The Application Secret of the IAMPASS application (from IAMPASS Console)
+.. code-block:: swift
 
+   import IAMPASSiOS
+   ...
+   // user_id: client generated identifer for the client applications user.
+   // display_name: A readable name for the user (user_id may be a random token)
+   // MY_APPLICATION_ID: The ID of the IAMPASS application (from IAMPASS Console)
+   // MY_APPLICATION_SECRET: The Application Secret of the IAMPASS application (from IAMPASS Console)
 
-        // Create an IAMPASS Management API instance using credentials for client application
-        let management_api = ManagementAPI(application_id: MY_APPLICATION_ID,application_secret: MY_APPLICATION_SECRET)
+   // Create an IAMPASS Management API instance using credentials for client application
+   let management_api = ManagementAPI(application_id: MY_APPLICATION_ID,application_secret: MY_APPLICATION_SECRET)
 
-        management_api.get_registration_link(user_id: user, display_name: user) { (reg_link) in
-                    // reg_link: URL that can be used to register the device.
-                } failure: { (error) in
-                    // Failed to get registration link.
-                }
-            }
+   management_api.get_registration_link(user_id: user, display_name: user) { (reg_link) in
+               // reg_link: URL that can be used to register the device.
+           } failure: { (error) in
+               // Failed to get registration link.
+           }
+       }
 
 Whichever method is used to obtain the registration link, the link can now be used to register the device
-    .. code-block:: swift
 
-        import IAMPASSiOS
-        ...
-        IPMobileDevice.registerDevice(identifier: user_id, registration_link: reg_link, notification_token: NOTIFICATION_TOKEN) { (identifier, device) in
-                    // Device registered
-                    // identifier: identifier for user (same as value passed to registerDevice)
-                    // device: IPMobileDevice that contains user and device information required for subequent IAMPASS calls.
-                    print("registered")
+.. code-block:: swift
 
-                } failure: { (identifier, error) in
-                    // identifier: identifier for user (same as value passed to registerDevice)
-                    // error: Error indicating failure reason
-                    print("failed")
-                }
+   import IAMPASSiOS
+   ...
+   IPMobileDevice.registerDevice(identifier: user_id, registration_link: reg_link, notification_token: NOTIFICATION_TOKEN) { (identifier, device) in
+               // Device registered
+               // identifier: identifier for user (same as value passed to registerDevice)
+               // device: IPMobileDevice that contains user and device information required for subequent IAMPASS calls.
+               print("registered")
+           } failure: { (identifier, error) in
+               // identifier: identifier for user (same as value passed to registerDevice)
+               // error: Error indicating failure reason
+               print("failed")
+           }
 
 Storing Device Information
-^^^^^^^^^^^^^^^^^^^^^^^^^^
+--------------------------
 The client application should store the IPMobileDevice instance returned by device registration.
 IPMobileDevice implements the Codeable interface and can be persisted using Swift encoding (JSONEncoder for example).
 The iOS UserDefaults can be used to store the data, however the iOS KeyChain main be a more secure option.
 
 .. _ios-training-label:
+
 Training
---------
+########
 After a device has been registered IAMPASS may have to collect some training data for the device.
 After registration check the `training_required` property of `IPMobileDevice` to determine if IAMPASS needs to perform training.
-    .. code-block:: swift
 
-        if registeredDevice.training_required{
-            // Perform training...
-        }
+.. code-block:: swift
+
+    if registeredDevice.training_required{
+        // Perform training...
+    }
 
 The IAMPASS iOS framework provides a default UI for performing training.
 The example code below shows a view controller that presents the training UI.
 
-    .. code-block:: swift
+.. code-block:: swift
 
-        // Class implements IPTrainingDelegate, which processes training results.
-        class MainViewController : UIViewController, IPTrainingDelegate{
+    // Class implements IPTrainingDelegate, which processes training results.
+    class MainViewController : UIViewController, IPTrainingDelegate{
 
-            func doTraining()->Void{
-                let device = self.get_device()
-                let user_id = self.get_user_id()
+        func doTraining()->Void{
+            let device = self.get_device()
+            let user_id = self.get_user_id()
 
-                var training_vc = IPTrainingViewController()
-                training_vc.device = device
-                training_vc.identifier = user_id
-                training_vc.delegate = self
+            var training_vc = IPTrainingViewController()
+            training_vc.device = device
+            training_vc.identifier = user_id
+            training_vc.delegate = self
 
-                // Present the view controller
-                self.present(training_vc, animated: true, completion: nil)
-            }
-
-            func get_device()->IPMobileDevice{
-                // Return registered device information
-            }
-
-            func get_user_id()->String{
-                // Return the user id
-            }
-
-            func save_device(user: Any?, device: IPDeviceData)->Void{
-                // Store the update device data.
-            }
-
+            // Present the view controller
+            self.present(training_vc, animated: true, completion: nil)
         }
-        // Implementation of IPTrainingDelegate
-        extension MainViewController: IPTrainingDelegate{
-            // Training is complete, update the stored device information
-            func didCompleteTraining(identifier: Any?, device: IPMobileDevice) {
-                print("completed training")
-                self.save_device(...)
-            }
 
-            func didFailToCompleteTraining(identifier: Any?, device: IPMobileDevice, error: Error?) {
-                print("training failed")
-            }
+        func get_device()->IPMobileDevice{
+            // Return registered device information
         }
+
+        func get_user_id()->String{
+            // Return the user id
+        }
+
+        func save_device(user: Any?, device: IPDeviceData)->Void{
+            // Store the update device data.
+        }
+
+    }
+    // Implementation of IPTrainingDelegate
+    extension MainViewController: IPTrainingDelegate{
+        // Training is complete, update the stored device information
+        func didCompleteTraining(identifier: Any?, device: IPMobileDevice) {
+            print("completed training")
+            self.save_device(...)
+        }
+
+        func didFailToCompleteTraining(identifier: Any?, device: IPMobileDevice, error: Error?) {
+            print("training failed")
+        }
+    }
 
 If you prefer to use Storyboards and Segues you can create a new IPTrainingViewController derived class and instantiate an instance in Interface Builder.
 
@@ -275,33 +285,34 @@ Updating Device Information
 Every time your application starts up or the user changes Notification Settings, you should update the device stored IPMobileDevice.
 Use the `update` method of `IPMobileDevice` to update the device information.
 When the device is updated IAMPASS may need to perform training. See :ref:`training <ios-training-label>` for information about training.
-    .. code-block:: swift
 
-        // Class implements IPTrainingDelegate, which processes training results.
-        class MainViewController : UIViewController, IPTrainingDelegate{
+.. code-block:: swift
 
-            // Update the stored mobile device.
-            func updateDevice()->Void{
-                let device = self.get_device()
-                let user_id = self.get_user_id()
+   // Class implements IPTrainingDelegate, which processes training results.
+   class MainViewController : UIViewController, IPTrainingDelegate{
 
-                device.update(identifier: user_id, notification_token: NOTIFICATION_TOKEN) { (identifier, updated_device) in
-                    print("Updated Device")
+       // Update the stored mobile device.
+       func updateDevice()->Void{
+           let device = self.get_device()
+           let user_id = self.get_user_id()
 
-                    // Save the device
-                    self.save_device(identifier: user_id, device: device)
-                    if mobile_device.training_required{
-                        DispatchQueue.main.async {
-                            self.doTraining()
-                        }
-                    }
-                } failure: { (identifier, error) in
-                    print("Update error")
-                }
+          device.update(identifier: user_id, notification_token: NOTIFICATION_TOKEN) { (identifier, updated_device) in
+              print("Updated Device")
 
-            }
+              // Save the device
+              self.save_device(identifier: user_id, device: device)
+              if mobile_device.training_required{
+                  DispatchQueue.main.async {
+                      self.doTraining()
+                  }
+              }
+          } failure: { (identifier, error) in
+              print("Update error")
+          }
 
-        }
+       }
+
+   }
 
 Handling Authentication Requests
 --------------------------------

@@ -30,6 +30,7 @@ Managing your Application
 The IAMPASS: :ref:`management_api` is used to manage your application.
 
 .. _adding-users-guide-label:
+
 Adding Users
 ^^^^^^^^^^^^
 Before you can authenticate a user, you have to register the user with IAMPASS.
@@ -42,8 +43,6 @@ The **user_id** column has a foreign key constraint to **User.id**
 
 The **token** field should be used as the id passed to the add_user route.
 
-.. table:: User Table
-
 +-------------------+
 | User Table        |
 +-----+-------------+
@@ -54,10 +53,9 @@ The **token** field should be used as the id passed to the add_user route.
 |  2  |   user2     |
 +-----+-------------+
 
-.. table:: Lookup Table
 
 +-------------------------------------------------------+
-| IAMPASS Token Table                             |
+| IAMPASS Token Table                                   |
 +-----+-------------------------+-----------------------+
 | id  |   user_id (FK User id)  |   token               |
 +=====+=========================+=======================+
@@ -77,9 +75,9 @@ We leave the decision as to how to share the link with your users up to you as I
 
 To obtain a registration link, use the Management API **device_registration_link** route.
 Once you have the device registration link, you can:
-    * Send it in an email
-    * Send it in an SMS message (this will ensure the link is sent to a mobile device)
-    * Render a QR code in your application. The IAMPASS mobile applications have the ability to scan QR codes and register devices.
+* Send it in an email
+* Send it in an SMS message (this will ensure the link is sent to a mobile device)
+* Render a QR code in your application. The IAMPASS mobile applications have the ability to scan QR codes and register devices.
 
 
 Checking if a user has Registered a Mobile Device
