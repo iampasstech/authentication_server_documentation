@@ -20,7 +20,7 @@ The easiest way to integrate IAMPASS into your application is to use the IAMPASS
 Add the folowing to your project's build.gradle::
 
     dependencies {
-        implementation 'com.iampass.iampass:iampass:1.1.1'
+        implementation 'com.iampass.iampass:iampass:1.1.3'
     }
 
 Getting Started
@@ -36,7 +36,7 @@ Add the IAMPASSframework to your project
 Add the folowing to your project's build.gradle::
 
     dependencies {
-        implementation 'com.iampass.iampass:iampass:1.1.1'
+        implementation 'com.iampass.iampass:iampass:1.1.3'
     }
 
 
