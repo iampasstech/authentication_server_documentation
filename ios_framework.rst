@@ -19,8 +19,7 @@ Installation
 The easiest way to integrate IAMPASS into your application is to use `CocoaPods <https://cocoapods.org>`__.
 To integrate IAMPASS into your xCode project using CocoaPods, specify it in your `podfile`.::
 
-    pod 'IAMPASSiOS', '~>0.0.1'
-
+    pod 'IAMPASSiOS', '~>0.0.65'
 Reference
 #########
 The IAMPASSiOS framework reference documentation can be found `here <https://iampasstech.github.io/ios_docs/>`__ 
@@ -38,7 +37,7 @@ Add the IAMPASSiOS framework to your project
 --------------------------------------------------
 To integrate IAMPASSiOS into your xCode project using CocoaPods, specify it in your `podfile`.::
 
-    pod 'IAMPASSiOS', '~>0.1.0'
+    pod 'IAMPASSiOS'
 
 Application Configuration
 #########################
@@ -50,6 +49,33 @@ Add the `Push Notifications <https://developer.apple.com/documentation/usernotif
 Configure IAMPASS Notifications Credentials
 -------------------------------------------------
 In order to send Push Notifications to your application you need to configure your IAMPASS:
+IAMPASS needs to be able to authenticate with the APNS servers. 
+The easiest way to do this is to use Token Based Authentication. You can obtain the token information using the instructions `here <https://developer.apple.com/documentation/usernotifications/setting_up_a_remote_notification_server/establishing_a_token-based_connection_to_apns>`_.
+
+* Open the `IAMPASS Console <https://main.iam-api.com>`__
+
+* Select you application and click the **Details** button.
+
+  .. image:: ./images/applications.png
+
+* In the details page click the settings icon and select **Notification Settings**.
+
+  .. image:: ./images/applicationdetails.png
+
+* On the Notifications Settings page click the **Edit** button for iOS.
+
+  .. image:: ./images/notificationsettings.png
+
+* On the **Apple iOS Notification Settings** page select **Custom iOS** app from the dropdown.
+
+* Select token for the authentication method.
+
+  .. image:: ./images/notification-token.png
+
+* Enter the values obtained from the Apple Developer Portal
+
+
+Alternatively you can use the certificate based authentication.
 * Download the APNS certificates for your application from the Apple Developer Portal.
 * Import the certificate and private key into KeyChain (both development and production keys).
 * Export the certificate and private key from KeyChain as .p12 files.
@@ -69,6 +95,9 @@ In order to send Push Notifications to your application you need to configure yo
 * On the **Apple iOS Notification Settings** page select **Custom iOS** app from the dropdown.
 
   .. image:: ./images/customnotification.png
+
+
+* Select certificate for the authentication method.
 
 * Update the credentials with your APNS certificate and Private Key.
 * Repeat the process for iOS Sandbox using your development credentials.
@@ -134,38 +163,7 @@ There are 2 common registration flows:
 Mobile Application Registration
 -------------------------------
 The IAMPASS iOS framework provides an interface for registering users and their mobile device.
-This example assumes that the mobile application has:
-* Registered for Push Notifications and stored the returned token in **NOTIFICATION_TOKEN**
-* Registered the user **user** with its own system.
-
-.. code-block:: swift
-
-   import IAMPASSiOS
-
-   // user: client generated identifer for the client applications user.
-   // NOTIFICATION_TOKEN: The token received by the application when it registers for Push Notifications
-   // MY_APPLICATION_ID: The ID of the IAMPASS application (from IAMPASS Console)
-   // MY_APPLICATION_SECRET: The Application Secret of the IAMPASS application (from IAMPASS Console)
-
-   // Create an IAMPASS Management API instance using credentials for client application
-   let management_api = ManagementAPI(application_id: MY_APPLICATION_ID,application_secret: MY_APPLICATION_SECRET)
-
-    // Register the user with IAMPASS and register this device.
-   management_api.create_user_and_register_device(user: user, notification_token: NOTIFICATION_TOKEN) {(user, device) in
-       // user: The identifier of the user (same as passed to create_user_and_register_device)
-       // device: IPMobileDevice that contains user and device information required for subequent Activeconect calls.
-
-       // This example encodes the IPDeviceData as JSON and stores it in user defaults.
-       let encoder = JSONEncoder()
-       if let encoded = try? encoder.encode(device){
-           let defaults = UserDefaults.standard
-           defaults.set(encoded, forKey: "user_data")
-           defaults.set(user, forKey: "user_name")
-       }
-   } failure: { (user, error) in
-       // user: The identifier of the user (same as passed to create_user_and_register_device)
-       // error: Error that describes failure reason.
-   }
+See the  IAMPASS example application on `GitHub <https://github.com/iampasstech/ios-example>`_ for details.
 
 External Registration
 ---------------------
@@ -200,10 +198,10 @@ Whichever method is used to obtain the registration link, the link can now be us
 
    import IAMPASSiOS
    ...
-   IPMobileDevice.registerDevice(identifier: user_id, registration_link: reg_link, notification_token: NOTIFICATION_TOKEN) { (identifier, device) in
+   IPUser.registerDevice(identifier: user_id, registration_link: reg_link, notification_token: NOTIFICATION_TOKEN) { (identifier, device) in
                // Device registered
                // identifier: identifier for user (same as value passed to registerDevice)
-               // device: IPMobileDevice that contains user and device information required for subequent IAMPASS calls.
+               // device: IPUser that contains user and device information required for subequent IAMPASS calls.
                print("registered")
            } failure: { (identifier, error) in
                // identifier: identifier for user (same as value passed to registerDevice)
@@ -213,20 +211,20 @@ Whichever method is used to obtain the registration link, the link can now be us
 
 Storing Device Information
 --------------------------
-The client application should store the IPMobileDevice instance returned by device registration.
-IPMobileDevice implements the Codeable interface and can be persisted using Swift encoding (JSONEncoder for example).
+The client application should store the IPUser instance returned by device registration.
+IPUser implements the Codeable interface and can be persisted using Swift encoding (JSONEncoder for example).
 The iOS UserDefaults can be used to store the data, however the iOS KeyChain main be a more secure option.
 
 .. _ios-training-label:
 
 Training
 ########
-After a device has been registered IAMPASS may have to collect some training data for the device.
-After registration check the `training_required` property of `IPMobileDevice` to determine if IAMPASS needs to perform training.
+After a user has been registered IAMPASS may have to collect some training data.
+After registration check the `training_required` property of `IPUser` to determine if IAMPASS needs to perform training.
 
 .. code-block:: swift
 
-    if registeredDevice.training_required{
+    if registeredUser.training_required{
         // Perform training...
     }
 
@@ -235,45 +233,35 @@ The example code below shows a view controller that presents the training UI.
 
 .. code-block:: swift
 
-    // Class implements IPTrainingDelegate, which processes training results.
-    class MainViewController : UIViewController, IPTrainingDelegate{
+    func doTrainingForUser(identifier: Any, user: IPUser) {
+        // It is important that the code to display UI components happens
+        // on the main thread.
+        DispatchQueue.main.async {
+            
+            // Get the ViewController to use to present the UI.
+            // If this code is part of a ViewController, just use self.
+            let presentingVC = getViewController()
+            
+            // Create the IAMPASS training view controller.
+            if let vc = IPTrainingViewController.create(user: user, identifier: identifier, success: { sender, identifier, device in
+                // The training process completed successfuly so save the user information.
+                if let id = identifier as? String{
 
-        func doTraining()->Void{
-            let device = self.get_device()
-            let user_id = self.get_user_id()
+                    //TODO: Save the user data.
 
-            var training_vc = IPTrainingViewController()
-            training_vc.device = device
-            training_vc.identifier = user_id
-            training_vc.delegate = self
-
-            // Present the view controller
-            self.present(training_vc, animated: true, completion: nil)
-        }
-
-        func get_device()->IPMobileDevice{
-            // Return registered device information
-        }
-
-        func get_user_id()->String{
-            // Return the user id
-        }
-
-        func save_device(user: Any?, device: IPDeviceData)->Void{
-            // Store the update device data.
-        }
-
-    }
-    // Implementation of IPTrainingDelegate
-    extension MainViewController: IPTrainingDelegate{
-        // Training is complete, update the stored device information
-        func didCompleteTraining(identifier: Any?, device: IPMobileDevice) {
-            print("completed training")
-            self.save_device(...)
-        }
-
-        func didFailToCompleteTraining(identifier: Any?, device: IPMobileDevice, error: Error?) {
-            print("training failed")
+                }
+                // sender is the training UI view controller, so dismiss it.
+                sender.dismiss(animated: true)
+            }, failure: { sender, identifier, device, error in
+                // TODO: Training failed - provide user feedback.
+                sender.dismiss(animated: true)
+            }){
+                // Present the training UI.
+                vc.modalPresentationStyle = .fullScreen
+                vc.modalTransitionStyle = .crossDissolve
+                presentingVC.present(vc, animated: true, completion: nil)
+                
+            }
         }
     }
 
@@ -282,8 +270,8 @@ If you prefer to use Storyboards and Segues you can create a new IPTrainingViewC
 
 Updating Device Information
 ---------------------------
-Every time your application starts up or the user changes Notification Settings, you should update the device stored IPMobileDevice.
-Use the `update` method of `IPMobileDevice` to update the device information.
+Every time your application starts up or the user changes Notification Settings, you should update the device stored IPUser.
+Use the `update` method of `IPUser` to update the device information.
 When the device is updated IAMPASS may need to perform training. See :ref:`training <ios-training-label>` for information about training.
 
 .. code-block:: swift
@@ -338,101 +326,63 @@ which will decode the payload and carry out the required authentication steps.
 
     .. code-block:: swift
 
-        var notificationHandler: IPNotificationHandler?
+        func application(
+              _ application: UIApplication,
+              didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+              fetchCompletionHandler completionHandler:
+              @escaping (UIBackgroundFetchResult) -> Void
+            ) {
+                
+                // IAMPASS authentcation request notifications contain data to identify the user the request targets.
+                // We have to provide the notification handler with a list of user data that is stored on this device so that it can determine whether the notification should be handled.
+                
+                // Do we have a user?
+                // Need to implent getRegisteredUser
+                if let user = self.getRegisteredUser(){
+                    let registeredUser = [user]
+                    let  notificationHandler = IPNotificationHandler()
+                    notificationHandler.processNotification(userInfo: userInfo, registeredUsers: registeredUser) { request, user in
+                        // This is an authentication request for a user of this device so show the authentication UI.
+                        let vc = IPAuthenticationViewController.create(request: request, device: user) { sender in
+                            // Authentication was successful
+                            sender.dismiss(animated: false) {
+                                // We send a notification now that the UI has been cleaned up so that interested
+                                // parties (ViewController) can update their state.
+                                NotificationCenter.default.post(name: AUTHENTICATION_UI_COMPLETE_MESSAGE, object: nil)
+                            }
+                        } failure: { sender, error in
+                            // Authentication failed.
+                            sender.dismiss(animated: false){
+                                // We send a notification now that the UI has been cleaned up so that interested
+                                // parties (ViewController) can update their state.
+                                NotificationCenter.default.post(name: AUTHENTICATION_UI_COMPLETE_MESSAGE, object: nil)
+                            }
+                        }
+                        vc?.modalPresentationStyle = .fullScreen
+                        vc?.modalTransitionStyle = .crossDissolve
 
+                        self.topViewController()?.present(vc!, animated: true)
 
-        class AppDelegate: UIResponder, UIApplicationDelegate {
-
-            func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
-                self.notificationHandler = IPNotificationHandler(delegate: self)
-                return true
-            }
-
-            // Client implemented function that gets any device information stored on this device.
-            func get_registered_devices()->[IPMobileDevice]{
-
-            }
-
-            // Application has received a Push Notification.
-            func application(   _ application: UIApplication,
-                                didReceiveRemoteNotification userInfo: [AnyHashable: Any],
-                                fetchCompletionHandler completionHandler:
-                                @escaping (UIBackgroundFetchResult) -> Void) {
-
-                // Get the device information stored on this device
-                let registeredDevices: self.get_registered_devices()
-
-                // Has the notification handler been initialized?
-                if let notificationHandler = self.notificationHandler{
-
-                    // Pass the notification to the notification handler along with the list of registered devices.
-                    // The notification handler will check that the notification is for the device.
-                    // The notification handler will call either presentAuthenticationUI or sessionStatusChanged
-                    // methods of its delegate if it handles the notification.
-                    let IAMPASSResponse = notificationHandler.processNotification(userInfo: userInfo, registeredDevices: registeredDevices)
-
-                    if IAMPASSResponse.ipNotification{
-                        completionHandler(ipResponse.suggestedCompletionResult)
-                        return
-                    }else{
-                        // This is not an IAMPASS notification so continue regular notification handling.
+                    } onStatusChanged: { status in
+                        // The notification is a session status change notification.
+                        completionHandler(.noData)
+                    } onError: { error in
+                        // There was an error handling the notification.
+                        completionHandler(.noData)
+                    } onIgnore: {
+                        // The notification is an IAMPASS notification but should be ignored.
+                        completionHandler(.noData)
+                    } defaultHandler: { userInfo in
+                        // The notification is not an IAMPASS notification.
+                        // The application should continue with its normal notification handling.
+                        completionHandler(.noData)
                     }
+
+                }else{
+                    completionHandler(.noData)
                 }
-                // Perform regular notification handling.
-                completionHandler(.noData)
+            
             }
-        }
-
-        extension AppDelegate: IPNotificationHandlerDelegate{
-            func sessionStatusChanged(status: IPSessionStatus) {
-                print("session status has changed")
-            }
-
-            func presentAuthenticationUI(request: IPAuthenticationRequest, device: IPMobileDevice) {
-                // Present the authentication flow.
-            }
-        }
-
-Presenting the Authentication UI
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-The IAMPASS iOS framework provides the class `IPAuthenticationViewController` to display the authentication UI.
-The `IPNotificationHandler.presentAuthenticationUI` should create an instance of `IPAuthenticationViewController`,
-set the `authenticationRequest` and `mobileDevice` properties and display the view controller.
-
-In iOS applications, notifications are received by the AppDelegate but there is no 'recommended' way of presenting a
-ViewController from the AppDelegate.
-
-When the `IPAuthenticationViewController` completes it will call either the `didAuthenticate` or `didFailToAuthenticate` member
-of its `authenticationDelegate`. The client application is responsible for dismissing the `IPAuthenticationViewController`.
-
-    .. code-block:: swift
-
-        class MainViewController: UIViewController{
-            ...
-            func presentAuthenticationUI( request: IPAuthenticationRequest, device: IPMobileDevice ) -> Void{
-                let authenticationController = IPAuthenticationViewController()
-                authenticationController.authenticationRequest = request
-                authenticationController.mobileDevice = device
-                authenticationController.authenticationDelegate = self
-                authenticationController.modalPresentationStyle = .fullScreen
-                self.present(authenticationController, animated: true, completion: nil
-            }
-        }
-
-        extension MainViewController: IPAuthenticationDelegate{
-            func didAuthenticate() {
-                print("authenticated")
-                // return UI to previous state.
-            }
-
-            func didFailToAuthenticate(error: Error?) {
-                print("failed to authenticate")
-                // return UI to previous state.
-            }
-        }
-
-You can create a IPAuthenticationViewController in a StoryBoard or Nib file rather than creating it programatically.
 
 Logging
 -------
